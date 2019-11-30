@@ -374,12 +374,8 @@ public class ClientWorker {
         }
 
         try {
-            // In order to prevent the server from handling the delay of the client's long task,
-            // increase the client's read timeout to avoid this problem.
-
-            long readTimeoutMs = timeout + (long) Math.round(timeout >> 1);
             HttpResult result = agent.httpPost(Constants.CONFIG_CONTROLLER_PATH + "/listener", headers, params,
-                agent.getEncode(), readTimeoutMs);
+                agent.getEncode(), timeout);
 
             if (HttpURLConnection.HTTP_OK == result.code) {
                 setHealthServer(true);

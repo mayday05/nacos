@@ -15,7 +15,7 @@
  */
 package com.alibaba.nacos.client.naming.utils;
 
-import com.alibaba.nacos.common.utils.VersionUtils;
+import com.alibaba.nacos.common.util.VersionUtils;
 
 /**
  * @author xuanyin.zy

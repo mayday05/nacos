@@ -107,10 +107,8 @@ public class CPInstancesAPI_ITCase {
         instance.setClusterName("c1");
         instance.setIp("11.11.11.11");
         instance.setPort(80);
-
         naming1.registerInstance(serviceName, TEST_GROUP_1, instance);
         TimeUnit.SECONDS.sleep(3L);
-
         naming1.deregisterInstance(serviceName, TEST_GROUP_1, instance);
         namingServiceDelete(serviceName, TEST_NAMESPACE_1, TEST_GROUP_1);
     }

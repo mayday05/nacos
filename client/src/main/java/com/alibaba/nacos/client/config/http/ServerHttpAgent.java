@@ -22,7 +22,7 @@ import com.alibaba.nacos.client.config.impl.HttpSimpleClient;
 import com.alibaba.nacos.client.config.impl.HttpSimpleClient.HttpResult;
 import com.alibaba.nacos.client.config.impl.ServerListManager;
 import com.alibaba.nacos.client.config.impl.SpasAdapter;
-import com.alibaba.nacos.common.utils.IoUtils;
+import com.alibaba.nacos.client.config.utils.IOUtils;
 import com.alibaba.nacos.client.identify.STSConfig;
 import com.alibaba.nacos.client.utils.TemplateUtils;
 import com.alibaba.nacos.client.utils.JSONUtils;
@@ -33,7 +33,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -103,7 +102,7 @@ public class ServerHttpAgent implements HttpAgent {
             if (serverListMgr.getIterator().hasNext()) {
                 currentServerAddr = serverListMgr.getIterator().next();
             } else {
-                maxRetry--;
+                maxRetry --;
                 if (maxRetry < 0) {
                     throw new ConnectException("[NACOS HTTP-GET] The maximum number of tolerable server reconnection errors has been reached");
                 }
@@ -158,7 +157,7 @@ public class ServerHttpAgent implements HttpAgent {
             if (serverListMgr.getIterator().hasNext()) {
                 currentServerAddr = serverListMgr.getIterator().next();
             } else {
-                maxRetry--;
+                maxRetry --;
                 if (maxRetry < 0) {
                     throw new ConnectException("[NACOS HTTP-POST] The maximum number of tolerable server reconnection errors has been reached");
                 }
@@ -211,7 +210,7 @@ public class ServerHttpAgent implements HttpAgent {
             if (serverListMgr.getIterator().hasNext()) {
                 currentServerAddr = serverListMgr.getIterator().next();
             } else {
-                maxRetry--;
+                maxRetry --;
                 if (maxRetry < 0) {
                     throw new ConnectException("[NACOS HTTP-DELETE] The maximum number of tolerable server reconnection errors has been reached");
                 }
@@ -350,15 +349,17 @@ public class ServerHttpAgent implements HttpAgent {
             conn.connect();
             respCode = conn.getResponseCode();
             if (HttpURLConnection.HTTP_OK == respCode) {
-                response = IoUtils.toString(conn.getInputStream(), Constants.ENCODE);
+                response = IOUtils.toString(conn.getInputStream(), Constants.ENCODE);
             } else {
-                response = IoUtils.toString(conn.getErrorStream(), Constants.ENCODE);
+                response = IOUtils.toString(conn.getErrorStream(), Constants.ENCODE);
             }
         } catch (IOException e) {
             LOGGER.error("can not get security credentials", e);
             throw e;
         } finally {
-            IoUtils.closeQuietly(conn);
+            if (null != conn) {
+                conn.disconnect();
+            }
         }
         if (HttpURLConnection.HTTP_OK == respCode) {
             return response;

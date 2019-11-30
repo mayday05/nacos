@@ -100,11 +100,6 @@ public class NacosMcpService extends ResourceSourceGrpc.ResourceSourceImplBase {
                         continue;
                     }
 
-                    if (service.allIPs().isEmpty()) {
-                        resourceMap.remove(convertedName);
-                        continue;
-                    }
-
                     // Update the resource:
                     changed = true;
                     resourceMap.put(convertedName, convertService(service));
@@ -161,8 +156,9 @@ public class NacosMcpService extends ResourceSourceGrpc.ResourceSourceImplBase {
             .setResolution(ServiceEntry.Resolution.STATIC)
             .setLocation(ServiceEntry.Location.MESH_INTERNAL)
             .addHosts(serviceName + "." + SERVICE_NAME_SPLITTER)
-            .addPorts(Port.newBuilder().setNumber(8848).setName("http").setProtocol("HTTP").build());
-        
+            .addPorts(Port.newBuilder().setNumber(8080).setName("http").setProtocol("HTTP").build());
+
+
         for (Instance instance : service.allIPs()) {
 
             if (!instance.isHealthy() || !instance.isEnabled()) {
